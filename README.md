@@ -34,7 +34,9 @@ Construir a través de NodeJS un microservicio con 2 endpoints que cumplan las s
 
 3. Buscar y reemplazar:
 
-- Método POST que reciba en el BODY un object como: P.E: {movie: star wars, find: jedi, replace: CLM Dev }
+**Método POST**
+
+- Un método POST que reciba en el BODY un object como: P.E: {movie: star wars, find: jedi, replace: CLM Dev }
 - Buscar dentro de la BD y obtener el campo PLOT del registro
 - Al string del plot obtenido buscar la palabra enviada en el Body (find) y reemplazar todas sus ocurrencias por el campo enviado en el body (replace)
 - Devolver el string con las modificaciones del punto anterior
