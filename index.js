@@ -19,14 +19,14 @@ db.on('open', () => console.log('Connection made.'))
 const Koa = require('koa')
 const app = new Koa()
 const bodyParser = require('koa-bodyparser')
-const router = require('./routes/index')
+const router = require('./routes')
 
 // logger //
-app.use(async (ctx, next) => {
-  // console.log(`INCOMING: Method ${ctx.method} - URL ${ctx.url} `)
-  await next()
-  // console.log(`OUTGOING: CTX ${ctx.toJSON} - URL ${ctx.url} `)
-})
+// app.use(async (ctx, next) => {
+// console.log(`INCOMING: Method ${ctx.method} - URL ${ctx.url} `)
+// await next()
+// console.log(`OUTGOING: CTX ${ctx.toJSON} - URL ${ctx.url} `)
+// })
 
 //// Middelwares ////
 app.use(bodyParser())

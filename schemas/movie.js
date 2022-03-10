@@ -2,13 +2,18 @@ const Joi = require('joi')
 
 const movieSchema = Joi.object({
   Title: Joi.string().min(2).max(255),
-  Year: Joi.number().min(1900),
+  Year: Joi.number(),
 })
 
-const movieSearchSchema = Joi.object({
+const movieUpdateSchema = Joi.object({
   movie: Joi.string().min(2).max(255),
   find: Joi.string().min(2).max(255),
   replace: Joi.string().min(2).max(255),
 })
 
-module.exports = { movieSchema, movieSearchSchema }
+const movieHeaderSchema = Joi.object({
+  pageNumber: Joi.number(),
+  movieYear: Joi.number(),
+})
+
+module.exports = { movieSchema, movieUpdateSchema, movieHeaderSchema }

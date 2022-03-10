@@ -1,7 +1,11 @@
 const Router = require('koa-router')
 const router = new Router()
 const Movie = require('../models/movie')
-const { movieSchema, movieSearchSchema } = require('../schemas/movie')
+const {
+  movieSchema,
+  movieUpdateSchema,
+  movieHeaderSchema,
+} = require('../schemas/movie')
 
 /*
 1) Buscador de películas:
@@ -28,16 +32,15 @@ router.get('/movies/search', async (ctx) => {
   const movieYear = ctx.request.headers['x-movie-year']
   const { title } = ctx.query
 
+  // validate headers with joi
+  const validYear = movieHeaderSchema.validate({ movieYear: movieYear })
+  const validTitle = movieSchema.validate({ Title: title })
+  if (validYear?.error) ctx.throw(400, validYear.error.message)
+  if (validTitle?.error) ctx.throw(400, validTitle.error.message)
+
   const filter = {}
   if (title) filter.Title = { $regex: title, $options: 'i' }
   if (movieYear) filter.Year = movieYear
-
-  // validation with joi
-  try {
-    movieSchema.validate(filter)
-  } catch (ex) {
-    ctx.throw(400, ex.message)
-  }
 
   const result = await Movie.find(filter)
     .skip((pageNumber - 1) * pageSize)
@@ -60,6 +63,13 @@ router.get('/movies', async (ctx) => {
   const pageSize = 5
   const pageNumber = ctx.request.headers['x-movie-page'] || 1
   const movieYear = ctx.request.headers['x-movie-year']
+
+  // validate headers with joi
+  const { values, error } = movieHeaderSchema.validate({
+    pageNumber,
+    movieYear,
+  })
+  if (error) ctx.throw(400, error.message)
 
   const result = await Movie.find(
     movieYear && {
@@ -91,7 +101,7 @@ reemplazar todas sus ocurrencias por el campo enviado en el body (replace)
 */
 router.post('/movies', async (ctx) => {
   // validate request with joi
-  const { values, error } = movieSearchSchema.validate(ctx.request.body)
+  const { values, error } = movieUpdateSchema.validate(ctx.request.body)
   if (error) ctx.throw(400, error.message)
 
   const { movie, find: searchValue, replace: replaceValue } = ctx.request.body
